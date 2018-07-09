@@ -1,38 +1,39 @@
 package com.niit.dao;
+
 import java.util.List;
+
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.Stereotype.Repository;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.niit.modelBlog;
-
-@Reposiyory("blogDAO")
+import com.niit.model.Blog;
+@Repository("blogDAO")
 @Transactional
 public class BlogDAOImpl implements BlogDAO
 {
-
 	@Autowired
 	SessionFactory sessionFactory;
-	
-	@Override
 	public boolean addBlog(Blog blog)
 	{
+		
 		try
 		{
-			sessionFactory.getCurrentSessiom().save(blog);
+			sessionFactory.getCurrentSession().save(blog);
 			return true;
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised:"+e;)
+			System.out.println("Exception Arised:"+e);
 			return false;
 		}
+		
 	}
-	@Override
-	public boolean deleteBlog(Blog blog)
+
+	public boolean deleteBlog(Blog blog) 
 	{
 		try
 		{
@@ -41,12 +42,12 @@ public class BlogDAOImpl implements BlogDAO
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised:'+e");
+			System.out.println("Exception Arised:"+e);
 			return false;
 		}
 	}
-	@Override
-	public boolean updateBlog(Blog blog)
+
+	public boolean updateBlog(Blog blog) 
 	{
 		try
 		{
@@ -55,67 +56,80 @@ public class BlogDAOImpl implements BlogDAO
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised:'+e");
+			System.out.println("Exception Arised:"+e);
 			return false;
 		}
 	}
-	@Override
-	public Blog getBlog(int blogId)
-	{
+
+	public Blog getBlog(int blogId) {
 		try
 		{
-			sessionsession=sessionFactory.opensession();
-			Blog blog=(Blog.class.blogId);
+			Session session=sessionFactory.openSession();
+			Blog blog=(Blog)session.get(Blog.class,blogId);
 			session.close();
 			return blog;
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised"+e);
+			System.out.println("Exception Arised:"+e);
+			return null;
+		}
+	
+	}
+
+	public List<Blog> listBlogs()
+	{
+		try
+		{
+			Session session=sessionFactory.openSession();
 			Query query=session.createQuery("from Blog");
-			List<Blog>;listBlogs=query.list();
+			List<Blog> listBlogs=query.list();
 			session.close();
 			return listBlogs;
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised"+e);
+			System.out.println("Exception Arised:"+e);
 			return null;
 		}
+	
 	}
-	@Override
-	public boolean approveBlog(int blogId){
+
+	public boolean approveBlog(int blogId)
+	{
 		try
 		{
 			Blog blog=this.getBlog(blogId);
 			blog.setStatus("A");
 			sessionFactory.getCurrentSession().update(blog);
-			return true;
+			return true;	
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised"+e);
+			System.out.println("Exception Arised:"+e);
 			return false;
 		}
 	}
-	@Override
-	public boolean rejectBlog(int blogId){
+
+	public boolean rejectBlog(int blogId)
+	{
 		try
 		{
 			Blog blog=this.getBlog(blogId);
 			blog.setStatus("NA");
 			sessionFactory.getCurrentSession().update(blog);
-			return true;
+			return true;	
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised"+e);
+			System.out.println("Exception Arised:"+e);
 			return false;
-		}
+		}	
+		
 	}
-	
-	@Override
-	public boolean incLikesBlog(int blogId){
+
+	public boolean incLikes(int blogId) 
+	{
 		try
 		{
 			Blog blog=this.getBlog(blogId);
@@ -125,33 +139,25 @@ public class BlogDAOImpl implements BlogDAO
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised:"+e);
+			System.out.println("Exception Arised"+e);
 			return false;
 		}
+		
 	}
-	@Override
-	public boolean disLikesBlog(int blogId){
+
+	public boolean disLikes(int blogId)
+	{
 		try
 		{
 			Blog blog=this.getBlog(blogId);
-			blog.setDisLikes(blog.getDisLikes()+1);
+			blog.setDislikes(blog.getDislikes()+1);
 			sessionFactory.getCurrentSession().update(blog);
 			return true;
 		}
 		catch(Exception e)
 		{
-			System.out.println("ExceptionArised:"+e);
+			System.out.println("Exception Arised"+e);
 			return false;
 		}
 	}
-		
-			
-	
-		}
-	}
-	
-}
-
-
-
 }
